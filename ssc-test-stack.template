@@ -263,14 +263,31 @@ resources:
              - sudo chmod 777 /var/lib/rabbitmq/.erlang.cookie
              - sudo echo "karabom" > /var/lib/rabbitmq/.erlang.cookie
              - sudo chmod 400 /var/lib/rabbitmq/.erlang.cookie
-             - sudo chmod 777 /etc/hosts
-             - sudo sed -i "s/127.0.0.1 localhost/127.0.0.2 localhost laptop1 laptop1.local/g" /etc/hosts
-             - sudo sed -i "2i 127.0.0.1 server" /etc/hosts
-             - sudo chmod 400 /etc/hosts
              - sudo kill -9 `sudo lsof -t -i:25672`
              - cd home/ubuntu
              - sudo mkdir workerApp
              - sudo chown ubuntu:ubuntu workerApp
+
+             # Docker Installation Step - 1
+             - sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+             - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+             - sudo apt-get update
+             - sudo apt-cache policy docker-ce
+             - sudo apt-get install -y docker-ce
+
+             # Extra additions Step - 1.5
+             - sudo touch /etc/docker/daemon.json
+             - sudo chmod 777 /etc/docker/daemon.json
+             - sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
+             - sudo chmod 400 /etc/docker/daemon.json
+
+             # Deploy FEniCS Step - 2
+             - sudo docker run --name worker-docker -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+             
+             # SOME COMMAND TO GET murtazo on VM Step - 3
+             - git clone https://github.com/Sprogis/murtazo
+             - sudo mv ./murtazo/murtazo.tgz ./murtazo.tgz
+             - sudo rm -rf murtazo
           user_data_format: RAW
 
   floating_ip:

@@ -25,9 +25,16 @@ if [ -z "$OS_USER_DOMAIN_NAME" ]; then unset OS_USER_DOMAIN_NAME; fi
 unset OS_TENANT_ID
 unset OS_TENANT_NAME
 
+#Add STACK_NAME
+echo "Please enter your OpenStack Stack_name for project $OS_PROJECT_NAME: "
+read -sr OS_STACKNAME_INPUT
+export STACK_NAME=$OS_STACKNAME_INPUT
+
 # In addition to the owning entity (tenant), OpenStack stores the entity
 # performing the action as the **user**.
-export OS_USERNAME="s14486"
+echo "Please enter your OpenStack Username for project $OS_PROJECT_NAME: "
+read -sr OS_USERNAME_INPUT
+export OS_USERNAME=$OS_USERNAME_INPUT
 
 # With Keystone you pass the keystone password.
 echo "Please enter your OpenStack Password for project $OS_PROJECT_NAME as user $OS_USERNAME: "

@@ -17,12 +17,13 @@ parameters:
     description: Image to be used for compute instance
     default: Ubuntu 16.04 LTS (Xenial Xerus) - latest
 
-  worker_image:
-    type: string
-    label: An worker image (Faster Startup)
-    default: Group16-Worker
-    constraints:
-      - custom_constraint: glance.image
+  # ADD WHEN WE HAVE A SNAPSHOT OF WORKER
+  #worker_image:
+  #  type: string
+  #  label: An worker image (Faster Startup)
+  #  default: Group16-Worker
+  #  constraints:
+  #    - custom_constraint: glance.image
 
   flavor:
     type: string
@@ -60,14 +61,14 @@ parameters:
     default: 0
     description: Default number of nodes when no worker image exists
 
-  API_name:
-    type: string
-    description: Username for SNIC 
-
-  API_pwd:
-    type: string
-    hidden: true
-    description: Password for SNIC
+  #API_name:
+  #  type: string
+  #  description: Username for SNIC 
+#
+#  #API_pwd:
+#  #  type: string
+#  #  hidden: true
+  #  description: Password for SNIC
 
 # Resource allocation
 resources:
@@ -184,38 +185,36 @@ resources:
          - sudo rabbitmqctl set_permissions -p karabomhost karabom ".*" ".*" ".*"
          - sudo rabbitmqctl delete_user guest
 
-         # Setup Openstack
-         - git clone https://github.com/SebastianLindgren/Cloud-Project-Files
-         - echo "export OS_USERNAME=\"$API_name\"" >> /root/.bashrc
-         - echo "export OS_PASSWORD=\"$API_pwd\"" >> /root/.bashrc
-         - echo "export STACK_NAME=\"$STACK_NAME\"" >> /root/.bashrc
-         - echo "source /home/ubuntu/Cloud-Project-Files/SNIC.sh" >> /home/ubuntu/.bashrc
+         # Setup Openstack (FIX LATER)
+         #- git clone https://github.com/SebastianLindgren/Cloud-Project-Files
+         #- echo "source /home/ubuntu/Cloud-Project-Files/SNIC.sh" >> /home/ubuntu/.bashrc
       user_data_format: RAW
-      params:
-        $API_USERNAME: { get_param: API_name }
-        $API_PASSWORD: { get_param: API_pwd }
-        $STACK_NAME: { get_param: 'OS::stack_name' }
+      #params:
+      #  $API_USERNAME: { get_param: API_name }
+      #  $API_PASSWORD: { get_param: API_pwd }
+      #  $STACK_NAME: { get_param: 'OS::stack_name' }
 
-  workers:
-    type: OS::Heat::ResourceGroup
-    properties:
-      count: { get_param: node_count }
-      resource_def:
-        type: OS::Nova::Server
-        properties:
-          name: Group16_Worker_-%index%
-          flavor: { get_param: worker_flavor }
-          image: { get_param: worker_image }
-          key_name: { get_param: key }
-          networks: 
-            - network: { get_resource: private_network }
-          security_groups:
-            - { get_resource: cluster_sg }
-            - "Karaboms"
-            - "default"
-          user_data: |
-            #!/bin/bash
-            cd /home/ubuntu
+  # ADD WHEN WE HAVE IMAGE OF WORKER
+  #workers:
+  #  type: OS::Heat::ResourceGroup
+  #  properties:
+  #    count: { get_param: node_count }
+  #    resource_def:
+  #      type: OS::Nova::Server
+  #      properties:
+  #        name: Group16_Worker_-%index%
+  #        flavor: { get_param: worker_flavor }
+  #        image: { get_param: worker_image }
+  #        key_name: { get_param: key }
+  #        networks: 
+  #          - network: { get_resource: private_network }
+  #        security_groups:
+  #          - { get_resource: cluster_sg }
+  #          - "Karaboms"
+  #          - "default"
+  #        user_data: |
+  #          #!/bin/bash
+  #          cd /home/ubuntu
 
   workers_init:
     type: OS::Heat::ResourceGroup

@@ -278,7 +278,6 @@ resources:
              # Extra additions Step - 1.5
              - sudo touch /etc/docker/daemon.json
              - sudo chmod 777 /etc/docker/daemon.json
-             - sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
           user_data_format: RAW
 
   floating_ip:

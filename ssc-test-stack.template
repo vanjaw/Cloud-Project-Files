@@ -186,10 +186,10 @@ resources:
          - sudo rabbitmqctl delete_user guest
 
          # Setup Openstack
-         - git clone https://github.com/SebastianLindgren/Cloud-Project-Files
+         - cd /home/ubuntu && git clone https://github.com/SebastianLindgren/Cloud-Project-Files
 
          # Fix by hand on server side below command
-         - echo "source /home/ubuntu/Cloud-Project-Files/SNIC.sh" >> /home/ubuntu/.bashrc
+         #- source /home/ubuntu/Cloud-Project-Files/SNIC.sh 
       user_data_format: RAW
       #params:
       #  $API_USERNAME: { get_param: API_name }
@@ -304,7 +304,6 @@ resources:
              - sudo docker exec -it worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
 
              # Installing Navier_Stokes Step - 7/8
-
              - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && exec ./compile_forms'
              - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec cmake .'
              - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
@@ -315,7 +314,7 @@ resources:
              - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
              - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
 
-             # Create gmesh -- THESE steps should be moved to worker
+             # Create gmesh -- THESE steps should be moved to celery worker
              # - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec ./runme.sh 0 30 10 200 3'
              # - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca/msh && exec dolfin-convert --help'
              # - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec ./airfoil  10 0.0001 10. 1 ../cloudnaca/msh/r2a15n200.xml'

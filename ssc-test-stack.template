@@ -255,9 +255,9 @@ resources:
 
             runcmd:
              - sudo apt install python3-pip
-             - sudo pip3 install flask
              - export LC_ALL="en_US.UTF-8"
              - export LC_CTYPE="en_US.UTF-8"
+             - sudo pip3 install flask
              - sudo pip3 install celery
              - sudo pip3 install -U termplotlib
              - sudo chmod 777 /var/lib/rabbitmq/.erlang.cookie
@@ -271,53 +271,6 @@ resources:
              - cd home/ubuntu
              - sudo mkdir workerApp
              - sudo chown ubuntu:ubuntu workerApp
-             
-             # Docker Installation Step - 1
-             - sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-             - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-             - sudo apt-get update
-             - sudo apt-cache policy docker-ce
-             - sudo apt-get install -y docker-ce
-             
-             # Extra additions Step - 1.5
-             - sudo touch /etc/docker/daemon.json
-             - sudo chmod 777 /etc/docker/daemon.json
-             - sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
-             - sudo chmod 400 /etc/docker/daemon.json
-
-             # Deploy FEniCS Step - 2
-             - sudo docker run --name worker-docker -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
-             
-             # SOME COMMAND TO GET murtazo on VM Step - 3
-             - git clone https://github.com/Sprogis/murtazo
-             - sudo mv ./murtazo/murtazo.tgz ./murtazo.tgz
-             - sudo rm -rf murtazo
-
-             # Copy Murtazo in container Step - 4 (NOT NECESSARY?)
-             # - sudo docker cp /home/ubuntu/murtazo/murtazo.tgz worker-docker:/home/fenics/shared/.
-
-             # Ignore Step - 5
-
-             # Extract files in container Step - 6
-             - sudo docker exec -it worker-docker tar xzvf murtazo.tgz
-             - sudo docker exec -it worker-docker tar xvf ./murtazo/cloudnaca.tgz -C ./murtazo
-             - sudo docker exec -it worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
-
-             # Installing Navier_Stokes Step - 7/8
-             - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && exec ./compile_forms'
-             - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec cmake .'
-             - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
-
-             # Installing Gmesh Step - 9
-             - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'
-             - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
-             - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
-             - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
-
-             # Create gmesh -- THESE steps should be moved to celery worker
-             # - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec ./runme.sh 0 30 10 200 3'
-             # - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca/msh && exec dolfin-convert --help'
-             # - sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec ./airfoil  10 0.0001 10. 1 ../cloudnaca/msh/r2a15n200.xml'
           user_data_format: RAW
 
   floating_ip:

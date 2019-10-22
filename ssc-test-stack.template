@@ -185,9 +185,11 @@ resources:
          - sudo rabbitmqctl set_permissions -p karabomhost karabom ".*" ".*" ".*"
          - sudo rabbitmqctl delete_user guest
 
-         # Setup Openstack (FIX LATER)
-         #- git clone https://github.com/SebastianLindgren/Cloud-Project-Files
-         #- echo "source /home/ubuntu/Cloud-Project-Files/SNIC.sh" >> /home/ubuntu/.bashrc
+         # Setup Openstack
+         - git clone https://github.com/SebastianLindgren/Cloud-Project-Files
+
+         # Fix by hand on server side below command
+         - echo "source /home/ubuntu/Cloud-Project-Files/SNIC.sh" >> /home/ubuntu/.bashrc
       user_data_format: RAW
       #params:
       #  $API_USERNAME: { get_param: API_name }

@@ -270,8 +270,8 @@ resources:
             ### Extra additions Step - 1.5 ###
             sudo touch /etc/docker/daemon.json
             sudo chmod 777 /etc/docker/daemon.json
-            ### sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json ###
-            # sudo chmod 400 /etc/docker/daemon.json
+            sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
+            sudo chmod 400 /etc/docker/daemon.json
 
             # Deploy FEniCS Step - 2
             # sudo docker run --name worker-docker -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current

@@ -153,7 +153,7 @@ resources:
          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwMjRlsV+aRfJye2jJB28W56GCVmjpDtrw7u+LCCKe4997Oh0KYdPvX/ZYtYmsdyt1Z8S+qiONqLt8NrvANo9fC3975k1D0NdPH3bkj3VyuuyKFnBjY2PQnOvmHtN4JZ6/ynn/wnHOagQg6Vtfd9OLgIP30ufig+3x2Do5EytFVyxyURHqPBeWRmrC2F6oqcVRaxezUoCur/mXOxwRwVYFmc+VMebGwyC95FDXN3WL2yeaTMweW3dyI5HMNdY/0c7ibjAVnsj82i/EnjEzdqnPfqV3IQuw5KEyOKbTkrW0/7pmviV6SAu6TL5FvZYVm7Gj9Z9BDNRaMM21y7hURgg9 Generated-by-Nova
          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXbYbH/tDyI7snDMSNNnIHsfZHdvCfeQTUo2uHhvINWpBkkJdteq73hnsHPvynVDSf9Gas9bLCMp5TXLfMwApW2nNb3TNOV1cJ7LFuudkGm0ZL5xmxce77ALyW5mVk+AC4q/ulgSCx1eAyPukv2v17bB9YnQI1jzRIrORKqwUArAg5mkHje41C6sS1ie1RfkrfGQzQypOdaOwNKCQjDTj7wFPid8UfhCWDiFypCM5Y2NT1lopDyK5Doikon9qf3vhJcOTywwjcPmMBHh/4fDX3uRWnUV4eKmZVLx5HxZyvyLlRcNSIj8BP8JoKh38W4kyEDYn2lZYHfXkLX0s4GMoX Generated-by-Nova
          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkxGKojxVde3u3G50DKRI5pvWq3KikSgxuV+nj9bfzXGqMJzSvMZBUjWY7iTAeOzmxQB/B+nbJW1SMwIUh9fksL7PuFv1ZtsPqnw1861S4hcxwfRhOpWI5TpOrY3k/lAkoYfMAEe9gLQ2et9sIXew8MbFymQ9o6J4MoMx7Bn8sJ2ed19L+uuKY86Ai//eVyQo0r/LImsGCxTPLTpRubarIFfTFfynkS01t/33dwrwxN3az4WpNIuL3oUZE6h0uxEpsyGCqKvaO8rUTCPNJquj4d4Z5LIIX2KNyPBrZcAFtsONPZsGZt3FxISRec5dAFG+lUp2PGs+0BNvflYy6vX8N alba6827@atterbom
-
+         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCoYJ44o4KuyCHUHebviFhcj0tLGshy96qo/Ct8EBe7jgUeSbQ7DxAUpQyxPMiH3JPgPF4klSoA4SEPyvHu5+RVaIzSgMvt2GIEVDxq0FHWMJwce8o2Vbz0862oCB6uUHXVcGly9DJszOuycmBIbMe6Glh4+FFHtxdalhfNOlvLWKcNLbo+UpmHVTUSsoID2e3mXbRSZDAmEn2N+D9Ite6E+v9u95gBSHpEApw4AbWjzUPL5fZ0KS8XewDaSPp3KUoLt30BAiU10zjJCCZ8NaD0ZZQY3RCfY8JLxzBfNUp9+FMFAu4pNSxL0B67XTl2u8o04lSL/x+6xUruYJ3eU0lH ubuntu@accv
         runcmd:
          - sudo apt install python3-pip
          - sudo pip3 install flask
@@ -170,9 +170,9 @@ resources:
          - cd workerApp
          - sudo kill -9 `sudo lsof -t -i:25672`
          - sudo rabbitmq-server -detached
-         - sudo rabbitmqctl start_app
          - sudo rabbitmqctl add_user karabom herpderp
          - sudo rabbitmqctl add_vhost karabomhost
+         - sudo rabbitmqctl set_user_tags karabom administrator
          - sudo rabbitmqctl set_permissions -p karabomhost karabom ".*" ".*" ".*"
          - sudo rabbitmqctl delete_user guest
 
@@ -239,6 +239,7 @@ resources:
             sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwMjRlsV+aRfJye2jJB28W56GCVmjpDtrw7u+LCCKe4997Oh0KYdPvX/ZYtYmsdyt1Z8S+qiONqLt8NrvANo9fC3975k1D0NdPH3bkj3VyuuyKFnBjY2PQnOvmHtN4JZ6/ynn/wnHOagQg6Vtfd9OLgIP30ufig+3x2Do5EytFVyxyURHqPBeWRmrC2F6oqcVRaxezUoCur/mXOxwRwVYFmc+VMebGwyC95FDXN3WL2yeaTMweW3dyI5HMNdY/0c7ibjAVnsj82i/EnjEzdqnPfqV3IQuw5KEyOKbTkrW0/7pmviV6SAu6TL5FvZYVm7Gj9Z9BDNRaMM21y7hURgg9 Generated-by-Nova" >> /home/ubuntu/.ssh/authorized_keys
             sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXbYbH/tDyI7snDMSNNnIHsfZHdvCfeQTUo2uHhvINWpBkkJdteq73hnsHPvynVDSf9Gas9bLCMp5TXLfMwApW2nNb3TNOV1cJ7LFuudkGm0ZL5xmxce77ALyW5mVk+AC4q/ulgSCx1eAyPukv2v17bB9YnQI1jzRIrORKqwUArAg5mkHje41C6sS1ie1RfkrfGQzQypOdaOwNKCQjDTj7wFPid8UfhCWDiFypCM5Y2NT1lopDyK5Doikon9qf3vhJcOTywwjcPmMBHh/4fDX3uRWnUV4eKmZVLx5HxZyvyLlRcNSIj8BP8JoKh38W4kyEDYn2lZYHfXkLX0s4GMoX Generated-by-Nova" >> /home/ubuntu/.ssh/authorized_keys
             sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkxGKojxVde3u3G50DKRI5pvWq3KikSgxuV+nj9bfzXGqMJzSvMZBUjWY7iTAeOzmxQB/B+nbJW1SMwIUh9fksL7PuFv1ZtsPqnw1861S4hcxwfRhOpWI5TpOrY3k/lAkoYfMAEe9gLQ2et9sIXew8MbFymQ9o6J4MoMx7Bn8sJ2ed19L+uuKY86Ai//eVyQo0r/LImsGCxTPLTpRubarIFfTFfynkS01t/33dwrwxN3az4WpNIuL3oUZE6h0uxEpsyGCqKvaO8rUTCPNJquj4d4Z5LIIX2KNyPBrZcAFtsONPZsGZt3FxISRec5dAFG+lUp2PGs+0BNvflYy6vX8N alba6827@atterbom" >> /home/ubuntu/.ssh/authorized_keys
+            sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCoYJ44o4KuyCHUHebviFhcj0tLGshy96qo/Ct8EBe7jgUeSbQ7DxAUpQyxPMiH3JPgPF4klSoA4SEPyvHu5+RVaIzSgMvt2GIEVDxq0FHWMJwce8o2Vbz0862oCB6uUHXVcGly9DJszOuycmBIbMe6Glh4+FFHtxdalhfNOlvLWKcNLbo+UpmHVTUSsoID2e3mXbRSZDAmEn2N+D9Ite6E+v9u95gBSHpEApw4AbWjzUPL5fZ0KS8XewDaSPp3KUoLt30BAiU10zjJCCZ8NaD0ZZQY3RCfY8JLxzBfNUp9+FMFAu4pNSxL0B67XTl2u8o04lSL/x+6xUruYJ3eU0lH ubuntu@accv" >> /home/ubuntu/.ssh/authorized_keys
             sudo pip3 install flask
             sudo pip3 install celery
             sudo pip3 install -U termplotlib
@@ -248,7 +249,7 @@ resources:
             sudo kill -9 `sudo lsof -t -i:25672`
             cd home/ubuntu
             sudo mkdir workerApp
-            sudo chown ubuntu:ubuntu workerA
+            sudo chown ubuntu:ubuntu workerApp
 
             ### Extra additions Step - 0.5 ###
             sudo mkdir /etc/docker/
@@ -265,8 +266,8 @@ resources:
             sudo apt-get install -y docker-ce
 
             # Deploy FEniCS Step - 2
-            sudo docker run --name worker-docker -t -d -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
-             
+            sudo docker run --name worker-docker --memory="5g" -t -d -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+            
             # SOME COMMAND TO GET murtazo on VM Step - 3
             git clone https://github.com/Sprogis/murtazo
             sudo mv ./murtazo/murtazo.tgz ./murtazo.tgz
@@ -292,6 +293,11 @@ resources:
             sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
             sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
             sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
+
+            # Install pip3 on Docker
+            sudo docker exec -i worker-docker sh -c 'cd /home/fenics/shared && exec sudo apt-get -y install python3-pip'
+            sudo docker exec -i worker-docker sh -c 'cd /home/fenics/shared && exec sudo pip3 install -U termplotlib'
+            sudo docker exec -i worker-docker sh -c 'cd /home/fenics/shared && exec sudo pip3 install celery'
 
             # Create gmesh -- THESE steps should be moved to celery worker
             # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec ./runme.sh 0 30 10 200 3'

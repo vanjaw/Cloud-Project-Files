@@ -240,7 +240,7 @@ resources:
             sudo apt-get update
             sudo apt-get upgrade
             sudo apt install python-dev
-            sudo apt install python3-pip
+            sudo apt-get -y install python3-pip
             sudo apt install build-essential
             sudo apt install rabbitmq-server
             export LC_ALL="en_US.UTF-8"

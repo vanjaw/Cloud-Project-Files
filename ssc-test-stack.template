@@ -287,25 +287,25 @@ resources:
             # Ignore Step - 5
 
             # Extract files in container Step - 6
-            sudo docker exec -it worker-docker tar xzvf murtazo.tgz
-            sudo docker exec -it worker-docker tar xvf ./murtazo/cloudnaca.tgz -C ./murtazo
-            sudo docker exec -it worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
+            sudo docker exec -i worker-docker tar xzvf murtazo.tgz
+            sudo docker exec -i worker-docker tar xvf ./murtazo/cloudnaca.tgz -C ./murtazo
+            sudo docker exec -i worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
 
             # Installing Navier_Stokes Step - 7/8
-            sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && exec ./compile_forms'
-            sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec cmake .'
-            sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && ./compile_forms'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec cmake .'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
 
             # Installing Gmesh Step - 9
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
+            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'
+            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
+            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
+            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
 
             # Create gmesh -- THESE steps should be moved to celery worker
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec ./runme.sh 0 30 10 200 3'
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca/msh && exec dolfin-convert --help'
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec ./airfoil  10 0.0001 10. 1 ../cloudnaca/msh/r2a15n200.xml'
+            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec ./runme.sh 0 30 10 200 3'
+            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca/msh && exec dolfin-convert --help'
+            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec ./airfoil  10 0.0001 10. 1 ../cloudnaca/msh/r2a15n200.xml'
           user_data_format: RAW
 
   floating_ip:

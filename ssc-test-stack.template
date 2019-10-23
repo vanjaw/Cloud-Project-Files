@@ -206,6 +206,7 @@ resources:
           user_data: |
             #!/bin/bash
             cd /home/ubuntu
+            sudo docker start worker-docker
 
   workers_init:
     type: OS::Heat::ResourceGroup

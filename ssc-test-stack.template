@@ -39,11 +39,11 @@ parameters:
     constraints:
       - custom_constraint: nova.flavor
 
-  key:
-    type: string
-    label: Key name
-    description: Name of key-pair to be used for compute instance
-    default: Karaboms Key
+  #key:
+  #  type: string
+  #  label: Key name
+  #  description: Name of key-pair to be used for compute instance
+  #  default: Karaboms Key
 
   public_network:
     type: string
@@ -137,7 +137,7 @@ resources:
       name: "Group16-Server"
       image: { get_param: image }
       flavor: { get_param: flavor }
-      key_name: { get_param: key }
+      #key_name: { get_param: key }
       #security_groups:
       #  - { get_resource: cluster_sg }
       networks:
@@ -228,7 +228,7 @@ resources:
           name: group16_worker_init_-%index%
           flavor: { get_param: flavor }
           image: { get_param: image }
-          key_name: { get_param: key }
+          #key_name: { get_param: key }
           networks:
             - network: { get_resource: private_network }
           security_groups:
@@ -271,7 +271,7 @@ resources:
             ### Extra additions Step - 1.5 ###
             sudo touch /etc/docker/daemon.json
             sudo chmod 777 /etc/docker/daemon.json
-            sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
+            ### sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json ###
           user_data_format: RAW
 
   floating_ip:

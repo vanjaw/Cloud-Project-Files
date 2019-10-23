@@ -158,7 +158,7 @@ resources:
         byobu_default: system
 
         ssh_authorized_keys:
-         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIPLqMZ8mFv8p2hjF/fNxA1N3FLyIzmKXC8bHUniFxidy4p7lI6nNsngyyL6xfGccXzHIuMGVS90Jrvr7Ygx0C4G7zOKarR8DBdJ8x2BDhLuEDEShtOlOo5AbroI6a9H85cwi6sUzw4itRoLh9zhDx5k/mRhi4FdGEgiXxWbLkzQuIcZsc/PYjdhaKmMPRTyhlq/iIUD/3wTbBbYwIUTL+tC/l5BgOIGNb8lMZYmQtFtq07eJLFTNlso3Se/bbDfzvand5enM9Xr5W7J2mOmAvhMvHMkTINhotXW3cWkyvMxDdpri5WcsNnqaYtGPopZ0bCQxWxXJUOXbi7xhdVYrb karabom@karaboms-Laptop
+         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDD7hh/gaxxHixzmaosN7GNXETT8qd6AY1yDkZxco2mSsylsHUf86gGLMNzqqoZs7MnlJb4fpyRhFX3kWNyMYHWdxLr21fm8V1qpkkLvSJ9qX5QXpjnyRUuKZtBRIiQANVd42fMJbxU2gnL3mJtqimy2Enyy5MEsghFVtlGuYsrs13MitGOZmorokNQlarHcwih4iC22n6K34mk4FErx2shIj+hoH7yhzsqWsmJNzJslVdsXQqwxKzcpDQq9XYxYyccWUZZcYjo+P4fBwNY/hqkVhsq+UCSbD7xydnVAu87QoTATKeg8krvxRzClXgMfoQ/uEZcmphgAx6BT8v3M4Ep karabom@karaboms-Laptop
          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwMjRlsV+aRfJye2jJB28W56GCVmjpDtrw7u+LCCKe4997Oh0KYdPvX/ZYtYmsdyt1Z8S+qiONqLt8NrvANo9fC3975k1D0NdPH3bkj3VyuuyKFnBjY2PQnOvmHtN4JZ6/ynn/wnHOagQg6Vtfd9OLgIP30ufig+3x2Do5EytFVyxyURHqPBeWRmrC2F6oqcVRaxezUoCur/mXOxwRwVYFmc+VMebGwyC95FDXN3WL2yeaTMweW3dyI5HMNdY/0c7ibjAVnsj82i/EnjEzdqnPfqV3IQuw5KEyOKbTkrW0/7pmviV6SAu6TL5FvZYVm7Gj9Z9BDNRaMM21y7hURgg9 Generated-by-Nova
          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXbYbH/tDyI7snDMSNNnIHsfZHdvCfeQTUo2uHhvINWpBkkJdteq73hnsHPvynVDSf9Gas9bLCMp5TXLfMwApW2nNb3TNOV1cJ7LFuudkGm0ZL5xmxce77ALyW5mVk+AC4q/ulgSCx1eAyPukv2v17bB9YnQI1jzRIrORKqwUArAg5mkHje41C6sS1ie1RfkrfGQzQypOdaOwNKCQjDTj7wFPid8UfhCWDiFypCM5Y2NT1lopDyK5Doikon9qf3vhJcOTywwjcPmMBHh/4fDX3uRWnUV4eKmZVLx5HxZyvyLlRcNSIj8BP8JoKh38W4kyEDYn2lZYHfXkLX0s4GMoX Generated-by-Nova
          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkxGKojxVde3u3G50DKRI5pvWq3KikSgxuV+nj9bfzXGqMJzSvMZBUjWY7iTAeOzmxQB/B+nbJW1SMwIUh9fksL7PuFv1ZtsPqnw1861S4hcxwfRhOpWI5TpOrY3k/lAkoYfMAEe9gLQ2et9sIXew8MbFymQ9o6J4MoMx7Bn8sJ2ed19L+uuKY86Ai//eVyQo0r/LImsGCxTPLTpRubarIFfTFfynkS01t/33dwrwxN3az4WpNIuL3oUZE6h0uxEpsyGCqKvaO8rUTCPNJquj4d4Z5LIIX2KNyPBrZcAFtsONPZsGZt3FxISRec5dAFG+lUp2PGs+0BNvflYy6vX8N alba6827@atterbom
@@ -272,6 +272,41 @@ resources:
             sudo touch /etc/docker/daemon.json
             sudo chmod 777 /etc/docker/daemon.json
             ### sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json ###
+            # sudo chmod 400 /etc/docker/daemon.json
+
+            # Deploy FEniCS Step - 2
+            # sudo docker run --name worker-docker -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+             
+            # SOME COMMAND TO GET murtazo on VM Step - 3
+            # git clone https://github.com/Sprogis/murtazo
+            # sudo mv ./murtazo/murtazo.tgz ./murtazo.tgz
+            # sudo rm -rf murtazo
+
+            # Copy Murtazo in container Step - 4 (NOT NECESSARY?)
+            # sudo docker cp /home/ubuntu/murtazo/murtazo.tgz worker-docker:/home/fenics/shared/.
+
+            # Ignore Step - 5
+
+            # Extract files in container Step - 6
+            # sudo docker exec -it worker-docker tar xzvf murtazo.tgz
+            # sudo docker exec -it worker-docker tar xvf ./murtazo/cloudnaca.tgz -C ./murtazo
+            # sudo docker exec -it worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
+
+            # Installing Navier_Stokes Step - 7/8
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && exec ./compile_forms'
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec cmake .'
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
+
+            # Installing Gmesh Step - 9
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
+
+            # Create gmesh -- THESE steps should be moved to celery worker
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec ./runme.sh 0 30 10 200 3'
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca/msh && exec dolfin-convert --help'
+            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec ./airfoil  10 0.0001 10. 1 ../cloudnaca/msh/r2a15n200.xml'
           user_data_format: RAW
 
   floating_ip:

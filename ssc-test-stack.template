@@ -260,18 +260,19 @@ resources:
             sudo mkdir workerApp
             sudo chown ubuntu:ubuntu workerA
 
+            ### Extra additions Step - 0.5 ###
+            sudo mkdir /etc/docker/
+            sudo touch /etc/docker/daemon.json
+            sudo chmod 777 /etc/docker/daemon.json
+            sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
+            sudo chmod 400 /etc/docker/daemon.json
+
             ### Docker Installation Step - 1 ###
             sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
             sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
             sudo apt-get update
             sudo apt-cache policy docker-ce
             sudo apt-get install -y docker-ce
-
-            ### Extra additions Step - 1.5 ###
-            sudo touch /etc/docker/daemon.json
-            sudo chmod 777 /etc/docker/daemon.json
-            sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
-            sudo chmod 400 /etc/docker/daemon.json
 
             # Deploy FEniCS Step - 2
             sudo docker run --name worker-docker -t -d -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current

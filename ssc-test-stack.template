@@ -287,9 +287,9 @@ resources:
             # Ignore Step - 5
 
             # Extract files in container Step - 6
-            # sudo docker exec -it worker-docker tar xzvf murtazo.tgz
-            # sudo docker exec -it worker-docker tar xvf ./murtazo/cloudnaca.tgz -C ./murtazo
-            # sudo docker exec -it worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
+            sudo docker exec -it worker-docker tar xzvf murtazo.tgz
+            sudo docker exec -it worker-docker tar xvf ./murtazo/cloudnaca.tgz -C ./murtazo
+            sudo docker exec -it worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
 
             # Installing Navier_Stokes Step - 7/8
             # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && exec ./compile_forms'

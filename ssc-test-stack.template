@@ -274,12 +274,12 @@ resources:
             sudo chmod 400 /etc/docker/daemon.json
 
             # Deploy FEniCS Step - 2
-            # sudo docker run --name worker-docker -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+            sudo docker run --name worker-docker -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
              
             # SOME COMMAND TO GET murtazo on VM Step - 3
-            # git clone https://github.com/Sprogis/murtazo
-            # sudo mv ./murtazo/murtazo.tgz ./murtazo.tgz
-            # sudo rm -rf murtazo
+            git clone https://github.com/Sprogis/murtazo
+            sudo mv ./murtazo/murtazo.tgz ./murtazo.tgz
+            sudo rm -rf murtazo
 
             # Copy Murtazo in container Step - 4 (NOT NECESSARY?)
             # sudo docker cp /home/ubuntu/murtazo/murtazo.tgz worker-docker:/home/fenics/shared/.

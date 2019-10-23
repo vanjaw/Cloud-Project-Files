@@ -18,12 +18,12 @@ parameters:
     default: Ubuntu 16.04 LTS (Xenial Xerus) - latest
 
   # ADD WHEN WE HAVE A SNAPSHOT OF WORKER
-  #worker_image:
-  #  type: string
-  #  label: An worker image (Faster Startup)
-  #  default: Group16-Worker
-  #  constraints:
-  #    - custom_constraint: glance.image
+  worker_image:
+    type: string
+    label: An worker image (Faster Startup)
+    default: Group16-Worker
+    constraints:
+      - custom_constraint: glance.image
 
   flavor:
     type: string
@@ -38,12 +38,6 @@ parameters:
     default: ssc.small
     constraints:
       - custom_constraint: nova.flavor
-
-  #key:
-  #  type: string
-  #  label: Key name
-  #  description: Name of key-pair to be used for compute instance
-  #  default: Karaboms Key
 
   public_network:
     type: string
@@ -137,9 +131,6 @@ resources:
       name: "Group16-Server"
       image: { get_param: image }
       flavor: { get_param: flavor }
-      #key_name: { get_param: key }
-      #security_groups:
-      #  - { get_resource: cluster_sg }
       networks:
         - port: { get_resource: server_port }
       user_data: |
@@ -196,27 +187,25 @@ resources:
       #  $API_PASSWORD: { get_param: API_pwd }
       #  $STACK_NAME: { get_param: 'OS::stack_name' }
 
-  # ADD WHEN WE HAVE IMAGE OF WORKER
-  #workers:
-  #  type: OS::Heat::ResourceGroup
-  #  properties:
-  #    count: { get_param: node_count }
-  #    resource_def:
-  #      type: OS::Nova::Server
-  #      properties:
-  #        name: Group16_Worker_-%index%
-  #        flavor: { get_param: worker_flavor }
-  #        image: { get_param: worker_image }
-  #        key_name: { get_param: key }
-  #        networks: 
-  #          - network: { get_resource: private_network }
-  #        security_groups:
-  #          - { get_resource: cluster_sg }
-  #          - "Karaboms"
-  #          - "default"
-  #        user_data: |
-  #          #!/bin/bash
-  #          cd /home/ubuntu
+  workers:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: { get_param: node_count }
+      resource_def:
+        type: OS::Nova::Server
+        properties:
+          name: Group16_Worker_-%index%
+          flavor: { get_param: worker_flavor }
+          image: { get_param: worker_image }
+          networks: 
+            - network: { get_resource: private_network }
+          security_groups:
+            - { get_resource: cluster_sg }
+            - "Karaboms"
+            - "default"
+          user_data: |
+            #!/bin/bash
+            cd /home/ubuntu
 
   workers_init:
     type: OS::Heat::ResourceGroup
@@ -298,10 +287,10 @@ resources:
             sudo docker exec -i worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
 
             # Installing Gmesh Step - 9
-            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'
-            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
-            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
-            # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
 
             # Create gmesh -- THESE steps should be moved to celery worker
             # sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec ./runme.sh 0 30 10 200 3'

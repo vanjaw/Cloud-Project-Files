@@ -274,7 +274,7 @@ resources:
             sudo chmod 400 /etc/docker/daemon.json
 
             # Deploy FEniCS Step - 2
-            sudo docker run --name worker-docker -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+            sudo docker run --name worker-docker -t -d -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
              
             # SOME COMMAND TO GET murtazo on VM Step - 3
             git clone https://github.com/Sprogis/murtazo
@@ -292,9 +292,9 @@ resources:
             sudo docker exec -it worker-docker tar xvf ./murtazo/navier_stokes_solver.tar -C ./murtazo
 
             # Installing Navier_Stokes Step - 7/8
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && exec ./compile_forms'
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec cmake .'
-            # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
+            sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver/src && exec ./compile_forms'
+            sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec cmake .'
+            sudo docker exec -it worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
 
             # Installing Gmesh Step - 9
             # sudo docker exec -it worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'

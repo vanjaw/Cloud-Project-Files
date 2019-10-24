@@ -257,11 +257,6 @@ resources:
             sudo chmod 777 /etc/docker/daemon.json
             sudo echo -e "{\n\"mtu\": 1400\n}" > /etc/docker/daemon.json
             sudo chmod 400 /etc/docker/daemon.json
-            sudo chmod 777 /etc/default/grub
-            sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"cgroup_enable=memory swapaccount=1\"/g" /etc/default/grub
-            sudo sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 cgroup_enable=memory swapaccount=1\"/g" /etc/default/grub
-            sudo chmod 400 /etc/default/grub
-            sudo update-grub
 
             ### Docker Installation Step - 1 ###
             sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -271,7 +266,7 @@ resources:
             sudo apt-get install -y docker-ce
 
             # Deploy FEniCS Step - 2
-            sudo docker run --name worker-docker --memory="5g" -t -d -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+            sudo docker run --name worker-docker -t -d -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
             
             # SOME COMMAND TO GET murtazo on VM Step - 3
             git clone https://github.com/Sprogis/murtazo

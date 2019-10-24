@@ -259,7 +259,7 @@ resources:
             sudo chmod 400 /etc/docker/daemon.json
             sudo chmod 777 /etc/default/grub
             sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"cgroup_enable=memory swapaccount=1\"/g" /etc/default/grub
-            sudo sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 cgroup_enable=memory swapaccount=1\"/g" /etc/default/grub
+            sudo sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 cgroup_enable=memory swapaccount=1\"/g" /etc/default/grub
             sudo chmod 400 /etc/default/grub
             sudo update-grub
 

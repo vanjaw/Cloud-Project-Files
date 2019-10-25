@@ -17,7 +17,14 @@ parameters:
     description: Image to be used for compute instance
     default: Ubuntu 16.04 LTS (Xenial Xerus) - latest
 
-  # ADD WHEN WE HAVE A SNAPSHOT OF WORKER
+  server_image:
+    type: string
+    label: A Server Image (Faster Startup)
+    default: Image to be used for server instance
+    default: Group16-Server
+    constraints:
+      - custom_constraint: glance.image
+
   worker_image:
     type: string
     label: An worker image (Faster Startup)
@@ -30,6 +37,14 @@ parameters:
     label: Flavor
     description: Type of instance (flavor) to be used
     default: ssc.small
+
+  server_flavor:
+    type: string
+    label: Flavor
+    description: Flavor to be used for workers
+    default: ssc.small
+    constraints:
+      - custom_constraint: nova.flavor
 
   worker_flavor:
     type: string
@@ -55,14 +70,14 @@ parameters:
     default: 0
     description: Default number of nodes when no worker image exists
 
-  #API_name:
-  #  type: string
-  #  description: Username for SNIC 
-#
-#  #API_pwd:
-#  #  type: string
-#  #  hidden: true
-  #  description: Password for SNIC
+  API_UNAME:
+    type: string
+    description: Username for SNIC 
+
+  API_PWD:
+    type: string
+    hidden: true
+    description: Password for SNIC
 
 # Resource allocation
 resources:
@@ -129,63 +144,88 @@ resources:
     type: OS::Nova::Server
     properties:
       name: "Group16-Server"
-      image: { get_param: image }
-      flavor: { get_param: flavor }
+      image: { get_param: server_image }
+      flavor: { get_param: server_flavor }
       networks:
         - port: { get_resource: server_port }
-      user_data: |
-        #cloud-config
-
-        apt_update: true
-        apt_upgrade: true
-        packages:
-         - python-dev
-         - python3-pip
-         - build-essential
-         - rabbitmq-server
-         - systemd
-         - python3-openstackclient
-         - python3-heatclient
-        byobu_default: system
-
-        ssh_authorized_keys:
-         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDD7hh/gaxxHixzmaosN7GNXETT8qd6AY1yDkZxco2mSsylsHUf86gGLMNzqqoZs7MnlJb4fpyRhFX3kWNyMYHWdxLr21fm8V1qpkkLvSJ9qX5QXpjnyRUuKZtBRIiQANVd42fMJbxU2gnL3mJtqimy2Enyy5MEsghFVtlGuYsrs13MitGOZmorokNQlarHcwih4iC22n6K34mk4FErx2shIj+hoH7yhzsqWsmJNzJslVdsXQqwxKzcpDQq9XYxYyccWUZZcYjo+P4fBwNY/hqkVhsq+UCSbD7xydnVAu87QoTATKeg8krvxRzClXgMfoQ/uEZcmphgAx6BT8v3M4Ep karabom@karaboms-Laptop
-         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwMjRlsV+aRfJye2jJB28W56GCVmjpDtrw7u+LCCKe4997Oh0KYdPvX/ZYtYmsdyt1Z8S+qiONqLt8NrvANo9fC3975k1D0NdPH3bkj3VyuuyKFnBjY2PQnOvmHtN4JZ6/ynn/wnHOagQg6Vtfd9OLgIP30ufig+3x2Do5EytFVyxyURHqPBeWRmrC2F6oqcVRaxezUoCur/mXOxwRwVYFmc+VMebGwyC95FDXN3WL2yeaTMweW3dyI5HMNdY/0c7ibjAVnsj82i/EnjEzdqnPfqV3IQuw5KEyOKbTkrW0/7pmviV6SAu6TL5FvZYVm7Gj9Z9BDNRaMM21y7hURgg9 Generated-by-Nova
-         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXbYbH/tDyI7snDMSNNnIHsfZHdvCfeQTUo2uHhvINWpBkkJdteq73hnsHPvynVDSf9Gas9bLCMp5TXLfMwApW2nNb3TNOV1cJ7LFuudkGm0ZL5xmxce77ALyW5mVk+AC4q/ulgSCx1eAyPukv2v17bB9YnQI1jzRIrORKqwUArAg5mkHje41C6sS1ie1RfkrfGQzQypOdaOwNKCQjDTj7wFPid8UfhCWDiFypCM5Y2NT1lopDyK5Doikon9qf3vhJcOTywwjcPmMBHh/4fDX3uRWnUV4eKmZVLx5HxZyvyLlRcNSIj8BP8JoKh38W4kyEDYn2lZYHfXkLX0s4GMoX Generated-by-Nova
-         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkxGKojxVde3u3G50DKRI5pvWq3KikSgxuV+nj9bfzXGqMJzSvMZBUjWY7iTAeOzmxQB/B+nbJW1SMwIUh9fksL7PuFv1ZtsPqnw1861S4hcxwfRhOpWI5TpOrY3k/lAkoYfMAEe9gLQ2et9sIXew8MbFymQ9o6J4MoMx7Bn8sJ2ed19L+uuKY86Ai//eVyQo0r/LImsGCxTPLTpRubarIFfTFfynkS01t/33dwrwxN3az4WpNIuL3oUZE6h0uxEpsyGCqKvaO8rUTCPNJquj4d4Z5LIIX2KNyPBrZcAFtsONPZsGZt3FxISRec5dAFG+lUp2PGs+0BNvflYy6vX8N alba6827@atterbom
-         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCoYJ44o4KuyCHUHebviFhcj0tLGshy96qo/Ct8EBe7jgUeSbQ7DxAUpQyxPMiH3JPgPF4klSoA4SEPyvHu5+RVaIzSgMvt2GIEVDxq0FHWMJwce8o2Vbz0862oCB6uUHXVcGly9DJszOuycmBIbMe6Glh4+FFHtxdalhfNOlvLWKcNLbo+UpmHVTUSsoID2e3mXbRSZDAmEn2N+D9Ite6E+v9u95gBSHpEApw4AbWjzUPL5fZ0KS8XewDaSPp3KUoLt30BAiU10zjJCCZ8NaD0ZZQY3RCfY8JLxzBfNUp9+FMFAu4pNSxL0B67XTl2u8o04lSL/x+6xUruYJ3eU0lH ubuntu@accv
-        runcmd:
-         - sudo apt install python3-pip
-         - sudo pip3 install flask
-         - export LC_ALL="en_US.UTF-8"
-         - export LC_CTYPE="en_US.UTF-8"
-         - sudo pip3 install celery
-         - sudo pip3 install -U termplotlib
-         - sudo chmod 777 /var/lib/rabbitmq/.erlang.cookie
-         - sudo echo "karabom" > /var/lib/rabbitmq/.erlang.cookie
-         - sudo chmod 400 /var/lib/rabbitmq/.erlang.cookie
-         - cd home/ubuntu
-         - sudo mkdir workerApp
-         - sudo chown ubuntu:ubuntu workerApp
-         - cd workerApp
-         - sudo kill -9 `sudo lsof -t -i:25672`
-         - sudo rabbitmq-server -detached
-         - sudo rabbitmqctl add_user karabom herpderp
-         - sudo rabbitmqctl add_vhost karabomhost
-         - sudo rabbitmqctl set_user_tags karabom administrator
-         - sudo rabbitmqctl set_permissions -p karabomhost karabom ".*" ".*" ".*"
-         - sudo rabbitmqctl delete_user guest
-
-         # Setup Openstack
-         - cd /home/ubuntu && git clone https://github.com/SebastianLindgren/Cloud-Project-Files
-
-         # Fix by hand on server side below command
-         #- source /home/ubuntu/Cloud-Project-Files/SNIC.sh 
       user_data_format: RAW
-      #params:
-      #  $API_USERNAME: { get_param: API_name }
-      #  $API_PASSWORD: { get_param: API_pwd }
-      #  $STACK_NAME: { get_param: 'OS::stack_name' }
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash
+            cd /home/ubuntu
+            sudo rabbitmq-server -detached
+
+            ### Download Files ###
+            sudo rm -rf ./Cloud-Project-Files
+            git clone https://github.com/SebastianLindgren/Cloud-Project-Files
+
+            sudo echo "export OS_USERNAME=\"$API_UNAME\"" >> /etc/bash.bashrc
+            echo "export OS_PASSWORD=\"$API_PWD\"" >> /etc/bash.bashrc
+            echo "export STACK_NAME=\"$STACK_NAME\"" >> /etc/bash.bashrc
+            echo "source ./Cloud-Project-Files/openstack/SET-SNIC.sh" >> /home/ubuntu/.bashrc
+          params:
+            $API_UNAME: { get_param: API_UNAME }
+            $API_PWD: { get_param: API_PWD }
+            $STACK_NAME: { get_param: 'OS::stack_name' }
+
+  #my_instance0_legacy:
+#  #  type: OS::Nova::Server
+#  #  properties:
+#  #    name: "Group16-Server"
+#  #    image: { get_param: image }
+#  #    flavor: { get_param: flavor }
+#  #    networks:
+#  #      - port: { get_resource: server_port }
+#  #    user_data: |
+#  #      #cloud-config
+#
+#  #      apt_update: true
+#  #      apt_upgrade: true
+#  #      packages:
+#  #       - python-dev
+#  #       - python3-pip
+#  #       - build-essential
+#  #       - rabbitmq-server
+#  #       - systemd
+#  #       - python3-openstackclient
+#  #       - python3-heatclient
+#  #      byobu_default: system
+#
+  #      ssh_authorized_keys:
+  #       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDD7hh/gaxxHixzmaosN7GNXETT8qd6AY1yDkZxco2mSsylsHUf86gGLMNzqqoZs7MnlJb4fpyRhFX3kWNyMYHWdxLr21fm8V1qpkkLvSJ9qX5QXpjnyRUuKZtBRIiQANVd42fMJbxU2gnL3mJtqimy2Enyy5MEsghFVtlGuYsrs13MitGOZmorokNQlarHcwih4iC22n6K34mk4FErx2shIj+hoH7yhzsqWsmJNzJslVdsXQqwxKzcpDQq9XYxYyccWUZZcYjo+P4fBwNY/hqkVhsq+UCSbD7xydnVAu87QoTATKeg8krvxRzClXgMfoQ/uEZcmphgAx6BT8v3M4Ep karabom@karaboms-Laptop
+  #       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwMjRlsV+aRfJye2jJB28W56GCVmjpDtrw7u+LCCKe4997Oh0KYdPvX/ZYtYmsdyt1Z8S+qiONqLt8NrvANo9fC3975k1D0NdPH3bkj3VyuuyKFnBjY2PQnOvmHtN4JZ6/ynn/wnHOagQg6Vtfd9OLgIP30ufig+3x2Do5EytFVyxyURHqPBeWRmrC2F6oqcVRaxezUoCur/mXOxwRwVYFmc+VMebGwyC95FDXN3WL2yeaTMweW3dyI5HMNdY/0c7ibjAVnsj82i/EnjEzdqnPfqV3IQuw5KEyOKbTkrW0/7pmviV6SAu6TL5FvZYVm7Gj9Z9BDNRaMM21y7hURgg9 Generated-by-Nova
+  #       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXbYbH/tDyI7snDMSNNnIHsfZHdvCfeQTUo2uHhvINWpBkkJdteq73hnsHPvynVDSf9Gas9bLCMp5TXLfMwApW2nNb3TNOV1cJ7LFuudkGm0ZL5xmxce77ALyW5mVk+AC4q/ulgSCx1eAyPukv2v17bB9YnQI1jzRIrORKqwUArAg5mkHje41C6sS1ie1RfkrfGQzQypOdaOwNKCQjDTj7wFPid8UfhCWDiFypCM5Y2NT1lopDyK5Doikon9qf3vhJcOTywwjcPmMBHh/4fDX3uRWnUV4eKmZVLx5HxZyvyLlRcNSIj8BP8JoKh38W4kyEDYn2lZYHfXkLX0s4GMoX Generated-by-Nova
+  #       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkxGKojxVde3u3G50DKRI5pvWq3KikSgxuV+nj9bfzXGqMJzSvMZBUjWY7iTAeOzmxQB/B+nbJW1SMwIUh9fksL7PuFv1ZtsPqnw1861S4hcxwfRhOpWI5TpOrY3k/lAkoYfMAEe9gLQ2et9sIXew8MbFymQ9o6J4MoMx7Bn8sJ2ed19L+uuKY86Ai//eVyQo0r/LImsGCxTPLTpRubarIFfTFfynkS01t/33dwrwxN3az4WpNIuL3oUZE6h0uxEpsyGCqKvaO8rUTCPNJquj4d4Z5LIIX2KNyPBrZcAFtsONPZsGZt3FxISRec5dAFG+lUp2PGs+0BNvflYy6vX8N alba6827@atterbom
+  #       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCoYJ44o4KuyCHUHebviFhcj0tLGshy96qo/Ct8EBe7jgUeSbQ7DxAUpQyxPMiH3JPgPF4klSoA4SEPyvHu5+RVaIzSgMvt2GIEVDxq0FHWMJwce8o2Vbz0862oCB6uUHXVcGly9DJszOuycmBIbMe6Glh4+FFHtxdalhfNOlvLWKcNLbo+UpmHVTUSsoID2e3mXbRSZDAmEn2N+D9Ite6E+v9u95gBSHpEApw4AbWjzUPL5fZ0KS8XewDaSPp3KUoLt30BAiU10zjJCCZ8NaD0ZZQY3RCfY8JLxzBfNUp9+FMFAu4pNSxL0B67XTl2u8o04lSL/x+6xUruYJ3eU0lH ubuntu@accv
+  #      runcmd:
+  #       - sudo apt install python3-pip
+  #       - sudo pip3 install flask
+  #       - export LC_ALL="en_US.UTF-8"
+  #       - export LC_CTYPE="en_US.UTF-8"
+  #       - sudo pip3 install celery
+  #       - sudo pip3 install -U termplotlib
+  #       - sudo chmod 777 /var/lib/rabbitmq/.erlang.cookie
+  #       - sudo echo "karabom" > /var/lib/rabbitmq/.erlang.cookie
+#  #       - sudo chmod 400 /var/lib/rabbitmq/.erlang.cookie
+#  #       - cd home/ubuntu
+#  #       - sudo mkdir workerApp
+#  #       - sudo chown ubuntu:ubuntu workerApp
+#  #       - cd workerApp
+#  #       - sudo kill -9 `sudo lsof -t -i:25672`
+#  #       - sudo rabbitmq-server -detached
+#  #       - sudo rabbitmqctl add_user karabom herpderp
+#  #       - sudo rabbitmqctl add_vhost karabomhost
+#  #       - sudo rabbitmqctl set_user_tags karabom administrator
+#  #       - sudo rabbitmqctl set_permissions -p karabomhost karabom ".*" ".*" ".*"
+#  #       - sudo rabbitmqctl delete_user guest
+#
+#  #       # Setup Openstack
+#         - cd /home/ubuntu && git clone https://github.com/SebastianLindgren/Cloud-Project-Files
+#
+#  #       # Fix by hand on server side below command
+#  #       #- source /home/ubuntu/Cloud-Project-Files/SNIC.sh 
+  #    user_data_format: RAW
 
   workers:
     type: OS::Heat::ResourceGroup
@@ -289,13 +329,13 @@ resources:
             sudo docker exec -i worker-docker sh -c 'cd ./murtazo/navier_stokes_solver && exec make -j 2'
 
             # Installing Gmesh Step - 9
-            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get update'
-            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt-get install gmsh'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo apt-get update'
+            sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo apt-get install gmsh'
             sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec sudo sed -i "s/GMSHBIN=\"\/Applications\/Gmsh.app\/Contents\/MacOS\/gmsh\"/GMSHBIN=\"\/usr\/bin\/gmsh\"/g" ./runme.sh'
             sudo docker exec -i worker-docker sh -c 'cd ./murtazo/cloudnaca && exec apt install python-numpy'
 
             # Install pip3 on Docker
-            sudo docker exec -i worker-docker sh -c 'cd /home/fenics/shared && exec sudo apt-get -y install python3-pip'
+            sudo docker exec -i worker-docker sh -c 'cd /home/fenics/shared && exec sudo apt-get install python3-pip'
             sudo docker exec -i worker-docker sh -c 'cd /home/fenics/shared && exec sudo pip3 install -U termplotlib'
             sudo docker exec -i worker-docker sh -c 'cd /home/fenics/shared && exec sudo pip3 install celery'
 
